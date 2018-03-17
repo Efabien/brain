@@ -14,10 +14,10 @@ module.exports = class Brain {
     this._degree = configs.degree;
     this._scope = configs.scope;
 
-    this.feed();
+    this._feed();
   }
 
-  feed() {
+  _feed() {
     this._brain.feed(
       this._knowledge.keyWords,
       this._knowledge.intents,
