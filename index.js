@@ -2,9 +2,15 @@ const brain = require('./brain');
 const _ = require('lodash');
 
 module.exports = class Brain {
-	constructor(knowledge, configs) {
-		this._brain = brain;	
-		this._knowledge = knowledge;
+	constructor(knowledges, configs) {
+		this._brain = brain;
+
+		this._knowledge = knowledges.reduce((item, result) => {
+			result.keyWords = _.merge(result.keyWords, item.keyWords);
+			result.intents = _.merge(result.intents, item.intents);
+			return result;
+		}, { keyWords: {}, intents: {} });
+		
 		this._degree = configs.degree;
 		this._scope = configs.scope;
 
