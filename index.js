@@ -1,4 +1,5 @@
 const brain = require('./brain');
+const _ = require('lodash');
 
 module.exports = class Brain {
 	constructor(knowledge, configs) {
