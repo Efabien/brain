@@ -42,32 +42,26 @@ var brain = (function(){
     }
     return res;
   }
-  var _detect = function (input){
-    var data = input.split(' ');
-    var res = [];
-    for(var intent in intents){
-      
-      var candidate = {intent:intent},score = 0;
-      var texts = intents[intent]['texts'];
-
-      texts.forEach(function(element,index){
-        
-        for(var i = 1; i <= scope; i++) {
-
-        strTool.portionReading(data,i,function(array){
-        strTool.portionReading(element,i,function(proc){
-          if(strTool.exactMatch(array,proc,degree)){
-              
-              score = score+(100/(array.length*texts.length));
-            
-          } 
-        })  
-          
-        });
-      }
+  const _detect =  (input) => {
+    const data = input.split(' ');
+    const res = [];
+    for(let intent in intents){
+      let candidate = { intent };
+      let score = 0;
+      const texts = intents[intent]['texts'];
+      texts.forEach((element,index) => { 
+        for(let i = 1; i <= scope; i++) {
+          strTool.portionReading(data, i, (array) => {
+            strTool.portionReading(element, i, (proc) => {
+              if(strTool.exactMatch(array,proc,degree)){
+                score = score + (100 / (array.length * texts.length));
+              } 
+            })  
+          });
+        }
       });
-    candidate.score = score;
-    res.push(candidate) ;
+      candidate.score = score;
+      res.push(candidate) ;
     }
     
     return res;
