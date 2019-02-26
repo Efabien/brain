@@ -34,6 +34,10 @@ module.exports = class Brain {
     return this._brain.extract(input, what);
   }
 
+  extractAll(input) {
+    return this._brain.extractAll(input);
+  }
+
   freeExtract(input) {
     return this._brain.extractAll(input);
   }

@@ -1,28 +1,32 @@
-var strTool = require('./lib/strings');
-var brain = (function(){
-  var keyWords,intents,scope,degree;
-  var _feed = function(x,y,z,foo){
+const strTool = require('./lib/strings');
+const brain = (() => {
+  let keyWords;
+  let intents;
+  let scope;
+  let degree;
+
+  const _feed = (x, y, z, foo) => {
     keyWords = x;
     intents = strTool.preCompute(y);
     scope = z;
     degree = foo;
   }
-  var _depth = function(what){
-    var res = 0;
+  const _depth = (what) => {
+    let res = 0;
+    let keys = [];
     for(var key in keyWords[what]){
-      keyWords[what][key].forEach(function(el){
-        res = el.length>res?el.length:res;
-      });
+      keys = keys.concat(keyWords[what][key]);
     }
-    return res; 
+    return keys.reduce((result, item) => {
+      return item.length > result ? item.length : result;
+    }, 0);
   }
-  var _extract = function(txt,what){
-    
-    var preselcted = [];
-    var data = txt.split(' ');
-    for(var key in keyWords[what]){
-      keyWords[what][key].forEach(function(element){
-        for(var i = 1;i <= _depth(what);i++){
+  const _extract = (txt, what) => {
+    const preselcted = [];
+    const data = txt.split(' ');
+    for(let key in keyWords[what]){
+      keyWords[what][key].forEach((element) => {
+        for(let i = 1; i <= _depth(what); i++){
           strTool.portionReading(data,i,function(array){
             if(strTool.exactMatch(element,array,degree)){
               preselcted.push(key);
@@ -34,14 +38,14 @@ var brain = (function(){
     var hold = {};
     hold[what] = preselcted;
     return preselcted[0]?hold:undefined;
-  }
-  var _extractAll = function(text){
-    var res = [];
-    for(var index in keyWords){
-      res.push(_extract(text,index));
-    }
-    return res;
-  }
+  };
+
+  const _extractAll = (text) => {
+    return Object.keys(keyWords).map(index => {
+      return _extract(text, index);
+    });
+  };
+
   const _detect =  (input) => {
     const data = input.split(' ');
     const res = [];
@@ -62,16 +66,15 @@ var brain = (function(){
       });
       candidate.score = score;
       res.push(candidate) ;
-    }
-    
+    } 
     return res;
   }
   //expose
   return {
-    feed:_feed,
-    extract:_extract,
-    extractAll:_extractAll,
-    detect:_detect
+    feed: _feed,
+    extract: _extract,
+    extractAll: _extractAll,
+    detect: _detect
   }
 })();
 module.exports = brain;
