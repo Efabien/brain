@@ -12,5 +12,5 @@ const brain = new Brain([knwlg2, knwlg], { degree, scope });
 
 const input = 'Give me the rate of the ether compared to the bitcoin euro';
 
-const analyse = brain.detect(input);
+const analyse = brain.lab(input);
 console.log(analyse);
