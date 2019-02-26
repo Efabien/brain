@@ -10,7 +10,8 @@ const brain = (() => {
     intents = strTool.preCompute(y);
     scope = z;
     degree = foo;
-  }
+  };
+
   const _depth = (what) => {
     let res = 0;
     let keys = [];
@@ -20,7 +21,8 @@ const brain = (() => {
     return keys.reduce((result, item) => {
       return item.length > result ? item.length : result;
     }, 0);
-  }
+  };
+
   const _extract = (txt, what) => {
     const preselcted = [];
     const data = txt.split(' ');
@@ -35,9 +37,9 @@ const brain = (() => {
         }
       });
     }
-    var hold = {};
+    const hold = {};
     hold[what] = preselcted;
-    return preselcted[0]?hold:undefined;
+    return preselcted[0] ? hold : undefined;
   };
 
   const _extractAll = (text) => {
@@ -48,33 +50,28 @@ const brain = (() => {
 
   const _detect =  (input) => {
     const data = input.split(' ');
-    const res = [];
-    for(let intent in intents){
-      let candidate = { intent };
-      let score = 0;
+    return Object.keys(intents).map(intent => {
+      const candidate = { intent };
       const texts = intents[intent]['texts'];
-      texts.forEach((element, index) => { 
+      candidate.score = texts.reduce((score, element ) => { 
         for(let i = 1; i <= scope; i++) {
           strTool.portionReading(data, i, (array) => {
             strTool.portionReading(element, i, (proc) => {
-              if(strTool.exactMatch(array,proc,degree)){
-                score = score + (100 / (array.length * texts.length));
-              } 
+              if (strTool.exactMatch(array, proc, degree)) score += (100 / (array.length * texts.length));
             })  
           });
         }
-      });
-      candidate.score = score;
-      res.push(candidate) ;
-    } 
-    return res;
-  }
-  //expose
+        return score;
+      }, 0);
+      return candidate;
+    });
+  };
+
   return {
     feed: _feed,
     extract: _extract,
     extractAll: _extractAll,
     detect: _detect
-  }
+  };
 })();
 module.exports = brain;

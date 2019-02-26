@@ -11,7 +11,7 @@ module.exports = {
 
 	intents: {
 		'askRate': {
-			'texts': ['donne moi le cours', 'quel est le cour sur le marché',],
+			'texts': ['donne moi le cours', 'quel est le cour sur le marché'],
 			'pondered': ['rate', 'cours']
 		},
 		'askRelativeRate': {
