@@ -1,4 +1,6 @@
 const strTool = require('./lib/strings');
+const vectors = require('./lib/vectors');
+
 const brain = (() => {
   let keyWords;
   let intents;
@@ -67,11 +69,27 @@ const brain = (() => {
     });
   };
 
+  const _generateSignatureVectors = () => {
+    const intentsKeys = Object.keys(intents);
+    return intentsKeys.map((key, index) => {
+      const text = intents[key]['texts'].reduce((acc, current) => {
+        return acc.concat(current);
+      }, []).join(' ');
+      const scores = _detect(text).map(candidate => {
+        return { [candidate.intent]: candidate.score };
+      });
+      return { [key]: scores.reduce((result, item) => {
+        return Object.assign(result, item);
+      }, {}) };
+    });
+  }
+
   return {
     feed: _feed,
     extract: _extract,
     extractAll: _extractAll,
-    detect: _detect
+    detect: _detect,
+    generateSignatureVectors: _generateSignatureVectors
   };
 })();
 module.exports = brain;

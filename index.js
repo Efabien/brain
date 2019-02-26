@@ -1,5 +1,6 @@
 const brain = require('./brain');
 const _ = require('lodash');
+const vectors = require('./lib/vectors');
 
 module.exports = class Brain {
   constructor(knowledges, configs) {
@@ -15,6 +16,7 @@ module.exports = class Brain {
     this._scope = configs.scope;
 
     this._feed();
+    this.signatureVectors = this._generateSignatureVectors()
   }
 
   _feed() {
@@ -30,6 +32,19 @@ module.exports = class Brain {
     return this._brain.detect(input);
   }
 
+  lab(input) {
+    const analyse = this._brain.detect(input);
+    const analyseVector = this._toVector(analyse);
+    const scores = this.signatureVectors.map(vector => {
+      const key = Object.keys(vector)[0];
+      const value = vector[key];
+      const diffs = vectors.substract([analyseVector, value])
+      console.log(diffs)
+      return { [key]: Math.hypot(...diffs)}
+    });
+    return scores;
+  }
+
   extract(input, what) {
     return this._brain.extract(input, what);
   }
@@ -40,5 +55,15 @@ module.exports = class Brain {
 
   freeExtract(input) {
     return this._brain.extractAll(input);
+  }
+
+  _generateSignatureVectors() {
+    return this._brain.generateSignatureVectors();
+  }
+
+  _toVector(analyse) {
+    return analyse.reduce((result, current) => {
+      return Object.assign(result, { [current.intent]: current.score });
+    }, {});
   }
 }
