@@ -3,7 +3,7 @@ var brain = (function(){
   var keyWords,intents,scope,degree;
   var _feed = function(x,y,z,foo){
     keyWords = x;
-    intents = strTool.preCompute(y)();
+    intents = strTool.preCompute(y);
     scope = z;
     degree = foo;
   }
@@ -49,7 +49,7 @@ var brain = (function(){
       let candidate = { intent };
       let score = 0;
       const texts = intents[intent]['texts'];
-      texts.forEach((element,index) => { 
+      texts.forEach((element, index) => { 
         for(let i = 1; i <= scope; i++) {
           strTool.portionReading(data, i, (array) => {
             strTool.portionReading(element, i, (proc) => {
