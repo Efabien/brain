@@ -10,7 +10,9 @@ const knwlg2 = require('./resources/knowledge2');
 
 const brain = new Brain([knwlg2, knwlg], { degree, scope });
 
-const input = 'Give me the rate of the ether compared to the bitcoin euro';
+const input = 'quantité vendu sur le marché euro';
 
-const analyse = brain.lab(input);
+const analyse = brain.detect(input);
+const keys = brain.extract(input, 'currency');
 console.log(analyse);
+console.log(keys);

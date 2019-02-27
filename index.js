@@ -32,15 +32,19 @@ module.exports = class Brain {
     return this._brain.detect(input);
   }
 
-  lab(input) {
+  guess(input) {
     const analyse = this._brain.detect(input);
     const analyseVector = this._toVector(analyse);
     const scores = this.signatureVectors.map(vector => {
       const key = Object.keys(vector)[0];
       const value = vector[key];
-      const diffs = vectors.substract([analyseVector, value])
-      console.log(diffs)
-      return { [key]: Math.hypot(...diffs)}
+      const diffs = vectors.substract([analyseVector, value]);
+      const score = diffs.reduce((result, current, index, array) => {
+        return array.slice(index + 1, array.length - 1).reduce((acc, item) => {
+          return result += Math.atan2(current, item);
+        }, result);
+      }, 0);
+      return { [key]: score }
     });
     return scores;
   }
