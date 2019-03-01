@@ -1,6 +1,6 @@
 {
   "name": "botbrain",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "a module for intent and keywords detection",
   "main": "index.js",
   "directories": {
