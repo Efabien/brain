@@ -41,7 +41,7 @@ module.exports = class Brain {
       const diffs = vectors.substract([analyseVector, value]);
       const score = diffs.reduce((result, current, index, array) => {
         return array.slice(index + 1, array.length - 1).reduce((acc, item) => {
-          return result += Math.atan2(current, item);
+          return acc += Math.atan2(current, item);
         }, result);
       }, 0);
       return { [key]: score }
