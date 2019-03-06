@@ -8,11 +8,9 @@ const knwlg = require('./resources/knowledge');
 
 const knwlg2 = require('./resources/knowledge2');
 
-const brain = new Brain([knwlg2, knwlg], { degree, scope });
+const brain = new Brain({ degree, scope });
 
 const input = 'quantité des vente sur le marché euro';
 
-const analyse = brain.detect(input);
-const keys = brain.extract(input, 'currency');
+const analyse = brain.detect(input, [knwlg2, knwlg]);
 console.log(analyse);
-console.log(keys);

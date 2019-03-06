@@ -1,7 +1,7 @@
 const strTool = require('./lib/strings');
 const vectors = require('./lib/vectors');
 
-const brain = (() => {
+const brain = () => {
   let keyWords;
   let intents;
   let scope;
@@ -91,5 +91,5 @@ const brain = (() => {
     detect: _detect,
     generateSignatureVectors: _generateSignatureVectors
   };
-})();
+};
 module.exports = brain;
