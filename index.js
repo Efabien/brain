@@ -6,11 +6,7 @@ module.exports = class Brain {
   constructor(knowledges, configs) {
     this._brain = brain;
 
-    this._knowledge = knowledges.reduce((item, result) => {
-      result.keyWords = _.merge(result.keyWords, item.keyWords);
-      result.intents = _.merge(result.intents, item.intents);
-      return result;
-    }, { keyWords: {}, intents: {} });
+    this._knowledge = this._load(knowledges);
     
     this._degree = configs.degree;
     this._scope = configs.scope;
@@ -26,6 +22,14 @@ module.exports = class Brain {
       this._scope,
       this._degree
     );
+  }
+
+  _load(knowledges) {
+    return knowledges.reduce((item, result) => {
+      result.keyWords = _.merge(result.keyWords, item.keyWords);
+      result.intents = _.merge(result.intents, item.intents);
+      return result;
+    }, { keyWords: {}, intents: {} });
   }
 
   detect(input) {
