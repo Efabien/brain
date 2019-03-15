@@ -22,9 +22,9 @@ module.exports = {
 			'texts': ['donne moi les quantités vendu sur le marché en', 'combien ont été vendu sur le marché de', 'donne moi le volume des vente sur le marché en'],
 			'pondered': ['vendu', 'volume', 'ventes']
 		},
-		'askMarketDaylyEvolution': {
-			'texts': ['donne moi l\'évolution du marché en', 'progression du marché de', 'évolution de la bourse en'],
-			'pondered': ['évolution', 'progression']
+		'askWeekAnalyse': {
+			'texts': ['donne moi une analyse de la semaine'],
+			'pondered': ['semaine', 'analyse']
 		}
 	}
 }
