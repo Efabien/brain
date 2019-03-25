@@ -12,9 +12,8 @@ const knwlg3 = require('./resources/knowledge3');
 
 const brain = new Brain([knwlg2, knwlg, knwlg3], { degree, scope });
 
-const input = 'quantité des vente sur le marché euro 2 1';
+const input = 'analyse du marché';
 
 const analyse = brain.detect(input);
 const keys = brain.extract(input, 'number');
-console.log(analyse);
-console.log(keys);
+console.log(analyse)

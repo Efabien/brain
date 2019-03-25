@@ -33,7 +33,10 @@ module.exports = class Brain {
   }
 
   detect(input) {
-    return this._brain.detect(input);
+    return this._brain.detect(input)
+    .reduce((result, item) => {
+      return item.score > result.score ? item : result;
+    }, { score: 0 });
   }
 
   guess(input) {
@@ -73,5 +76,9 @@ module.exports = class Brain {
     return analyse.reduce((result, current) => {
       return Object.assign(result, { [current.intent]: current.score });
     }, {});
+  }
+
+  wordsWeigth() {
+    return this._brain.getWeigths();
   }
 }

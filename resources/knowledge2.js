@@ -23,7 +23,7 @@ module.exports = {
 			'pondered': ['vendu', 'volume', 'ventes']
 		},
 		'askWeekAnalyse': {
-			'texts': ['donne moi une analyse de la semaine'],
+			'texts': ['donne moi une analyse de la semaine', 'analyse du marché'],
 			'pondered': ['semaine', 'analyse']
 		}
 	}

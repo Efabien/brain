@@ -6,12 +6,15 @@ const brain = (() => {
   let intents;
   let scope;
   let degree;
+  let weigths;
+  const SMALLEST = 0.0000000001;
 
   const _feed = (x, y, z, foo) => {
     keyWords = x;
     intents = strTool.preCompute(y);
     scope = z;
     degree = foo;
+    weigths = _getWeigths();
   };
 
   const _depth = (what) => {
@@ -59,7 +62,12 @@ const brain = (() => {
         for(let i = 1; i <= scope; i++) {
           strTool.portionReading(data, i, (array) => {
             strTool.portionReading(element, i, (proc) => {
-              if (strTool.exactMatch(array, proc, degree)) score += (100 / (array.length * texts.length));
+              if (strTool.exactMatch(array, proc, degree)) {
+                const weigthsSums = array.reduce((sum, word) => {
+                  return sum += _getWordWeigth(intent, word);
+                }, 0);
+                score += (1 / (array.length * texts.length)) * weigthsSums;
+              }
             })  
           });
         }
@@ -82,6 +90,41 @@ const brain = (() => {
         return Object.assign(result, item);
       }, {}) };
     });
+  };
+
+  const _getWeigths = () => {
+    return Object.keys(intents).map(key => {
+      const res = {};
+      res.intent = key;
+      res.weigths = intents[key].texts.map((sentence, index, texts) => {
+        return sentence.map((word) => {
+          return { word, weigth: _calculateWordWeigth(word, texts, intents) };
+        }, {});
+      }).reduce((res, item) => {
+        return res = res.concat(item);
+      }, []);
+      return res;
+    });
+  };
+
+  const _calculateWordWeigth = (word, texts, intents) => {
+    const wordFrequency = texts.reduce((f, sentence) => {
+      return f += sentence.filter(w => w === word).length;
+    }, 0);
+    const docFrequency = Object.keys(intents).reduce((number, key) => {
+      const intent = intents[key];
+      return number += intent.texts.reduce((occurence, sentence) => {
+        if (occurence) return occurence;
+        return occurence = sentence.some(token => token === word) ? 1 : 0;
+      }, 0);
+    }, 0);
+    return wordFrequency * (1 / docFrequency);
+  }
+
+  const _getWordWeigth = (intent, word) => {
+    const data = weigths.find(item => item.intent === intent);
+    const result = data.weigths.find(item => { item.word === word }) || {};
+    return result.weigth || SMALLEST;
   }
 
   return {
@@ -89,7 +132,8 @@ const brain = (() => {
     extract: _extract,
     extractAll: _extractAll,
     detect: _detect,
-    generateSignatureVectors: _generateSignatureVectors
+    generateSignatureVectors: _generateSignatureVectors,
+    getWeigths: _getWeigths
   };
 })();
 module.exports = brain;
