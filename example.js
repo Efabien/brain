@@ -10,7 +10,7 @@ const knwlg2 = require('./resources/knowledge2');
 
 const brain = new Brain({ degree, scope });
 
-const input = 'analyse du marché';
+const input = 'donne moi des nouvelles';
 
 const analyse = brain.detect(input, [knwlg2, knwlg]);
 console.log(analyse);
