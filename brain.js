@@ -1,5 +1,6 @@
 const strTool = require('./lib/strings');
 const vectors = require('./lib/vectors');
+const _ = require('lodash');
 
 const brain = () => {
   let keyWords;
@@ -58,22 +59,24 @@ const brain = () => {
     return Object.keys(intents).map(intent => {
       const candidate = { intent };
       const texts = intents[intent]['texts'];
-      candidate.score = texts.reduce((score, element ) => { 
+      const result = texts.reduce((holder, element ) => { 
         for(let i = 1; i <= scope; i++) {
           strTool.portionReading(data, i, (array) => {
             strTool.portionReading(element, i, (proc) => {
               if (strTool.exactMatch(array, proc, degree)) {
+                holder.matchs = holder.matchs.concat(array);
                 const weigthsSums = array.reduce((sum, word) => {
                   return sum += _getWordWeigth(intent, word);
                 }, 0);
-                score += (1 / (array.length * texts.length)) * weigthsSums;
+                holder.score += (1 / (array.length * texts.length)) * weigthsSums;
               }
             })  
           });
         }
-        return score;
-      }, 0);
-      return candidate;
+        return holder;
+      }, { matchs: [], score: 0 });
+      result.matchs = _.uniq(result.matchs);
+      return _.merge(candidate, result);
     });
   };
 
